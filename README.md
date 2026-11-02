@@ -25,6 +25,7 @@ CryptMask/
         decoder.py
         menu.py
     utils/
+    videos/             Arquivos de video para mascarar
     inputs/             Arquivos a codificar
     outputs/            Arquivos de vídeo gerados
     decripts/           Arquivos decodificados
