@@ -1,5 +1,5 @@
 import os, sys
-from utils.Utils import MENU, _Back, _Quit
+from utils.Utils import MENU, _Back, _Quit, AFTERACTION
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -12,6 +12,7 @@ DECRYPTS = os.path.join(BASE, 'decrypts')
 for _ in (INPUTS, OUTPUTS, DECRYPTS):
     os.makedirs(_, exist_ok=True)
 
+
 def ask(prompt: str, default: str = '') -> str:
     try:
         val = input(prompt).strip()
@@ -23,12 +24,30 @@ def ask(prompt: str, default: str = '') -> str:
         raise _Back()
     return val if val else default
 
+
+def AfterAction():
+    print(AFTERACTION)
+    while True:
+        try:
+            choice = input("\nOpção [0]: ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            raise _Quit()
+        if not choice or choice == '0':
+            return False
+        if choice == '1':
+            return True
+        if choice == 'q':
+            raise _Quit()
+        print("  Opção inválida.")
+
+
 _ACTIONS = {
     '1',
     '2',
     '3',
     '4',
 }
+
 
 def main():
     while True:
