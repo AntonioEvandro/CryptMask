@@ -78,3 +78,31 @@ def totalCoverSize(paths: list) -> int:
     return sum(GetCoverSize(p) for p in paths)
 
 
+def writeSingleCover(out_f, videoPath: str) -> None:
+    """Copia o conteúdo do vídeo de capa para o arquivo de saída."""
+    if not os.path.exists(videoPath):
+        return
+    size = os.path.getsize(videoPath)
+    with open(videoPath, 'rb') as f:
+        remaining = size
+        while remaining > 0:
+            chunk = f.read(min(CHUNK_SIZE, remaining))
+            if not chunk:
+                break
+            out_f.write(chunk)
+            remaining -= len(chunk)
+
+
+def WriteCoverBlock(out_f, coverPaths: list) -> None:
+    """
+    Escreve a capa (se houver) no arquivo de saída.
+    Se coverPaths estiver vazio, escreve apenas o header.bin (sem capa).
+    Se houver um caminho, escreve o vídeo e depois o COVER_END.
+    """
+    if not coverPaths:
+        out_f.write(LoadHeader())
+        return
+
+    # Espera-se apenas um vídeo (capa única)
+    writeSingleCover(out_f, coverPaths[0])
+    out_f.write(COVER_END)
