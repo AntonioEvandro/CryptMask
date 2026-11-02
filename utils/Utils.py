@@ -18,3 +18,10 @@ MENU = """
         ║                              ║
         ║  q. Sair                     ║
         ╚══════════════════════════════╝"""
+
+AFTERACTION = """
+\n──────────────────────────────────────────────
+    1. Repetir com outro arquivo
+    0. Voltar ao menu principal
+    q. Sair
+"""
