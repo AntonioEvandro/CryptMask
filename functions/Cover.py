@@ -44,3 +44,14 @@ class CoverConfig:
     def SinglePath(self) -> str:
         return self.singlePath if self.singlePath else COVER
 
+def DescribeStatus(config: CoverConfig) -> str:
+    """Gera a linha de status mostrada como 'Modo atual' no menu."""
+    if config.mode == MODENONE:
+        return "[Sem capa]"
+
+    if config.mode == MODESINGLE:
+        path = config.SinglePath()
+        if os.path.exists(path):
+            sizeMb = os.path.getsize(path) / 1024 / 1024
+            return f"[Capa única]\n({os.path.relpath(path, VIDEOS if os.path.isdir(VIDEOS) else os.path.dirname(path))} - {sizeMb:.1f} MB)"
+        return "[Capa única]\n(arquivo não encontrado)"
