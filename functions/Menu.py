@@ -13,6 +13,7 @@ for _ in (INPUTS, OUTPUTS, DECRYPTS):
     os.makedirs(_, exist_ok=True)
 
 
+# Helpers de input
 def ask(prompt: str, default: str = '') -> str:
     try:
         val = input(prompt).strip()
@@ -25,6 +26,7 @@ def ask(prompt: str, default: str = '') -> str:
     return val if val else default
 
 
+# Acões pós operação
 def AfterAction():
     print(AFTERACTION)
     while True:
@@ -41,11 +43,42 @@ def AfterAction():
         print("  Opção inválida.")
 
 
+# Resolução de caminhos
+
+def FindInput(name: str) -> str:
+    if os.path.exists(name):
+        return name
+    for folder in (INPUTS, OUTPUTS):
+        candidate = os.path.join(folder, name)
+        if os.path.exists(candidate):
+            return candidate
+        return name
+
+
+def ResolveEncOutput(raw: str, originalName: str) -> str:
+    stem = os.path.splitext(originalName)[0]
+    if not raw:
+        return os.path.join(OUTPUTS, stem + '.mp4')
+    if raw.endswith(('/', '\\')) or os.path.isdir(raw):
+        return os.path.join(raw, stem + '.mp4')
+    if os.path.dirname(raw):
+        return raw
+    return os.path.join(OUTPUTS, raw)
+
+
+def ResolveDecOutput(raw: str, originalName: str) -> str:
+    if not raw:
+        return os.path.join(DECRYPTS, originalName)
+    if raw.endswith(('/', '\\')) or os.path.isdir(raw):
+        return os.path.join(raw, originalName)
+    if os.path.dirname(raw):
+        return raw
+    return os.path.join(DECRYPTS, raw)
+
+
 _ACTIONS = {
     '1',
-    '2',
-    '3',
-    '4',
+    '2'
 }
 
 
