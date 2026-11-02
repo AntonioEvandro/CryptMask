@@ -86,11 +86,73 @@ def SubmenuCover(config: CoverConfig = None) -> CoverConfig:
     """
     Sub-menu para gerenciar vídeo(s) de capa (modo único ou nenhum).
 
-    Modo padrão: capa única (usa videos/cover.mp4 se existir, senão pergunta).
+    Modo padrão: capa única (usa videos/cover.mp4 se existir, se não pergunta).
     """
     if config is None:
         # Define como SINGLE por padrão (usa cover.mp4 se existir)
-        config = CoverConfig(mode=MODE_SINGLE)
+        config = CoverConfig(mode=MODESINGLE)
+        
+    while True:
+        print("\n  ───────── Vídeo de capa ───────────────")
+        print("  (0 = voltar  |  q = sair)\n")
+
+        status = DescribeStatus(config)
+        print(f"  Modo atual: {status}\n")
+
+        print("  1. Sem capa")
+        print("  2. Capa única         (escolher 1 vídeo fixo)")
+        print("\n  s. Confirmar  (aceita o modo atual mostrado acima)")
+
+        try:
+            choice = input("\n  Opção [s]: ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            raise _Quit()
+
+        if choice == 'q':
+            raise _Quit()
+        if choice == '0':
+            return config
+        if not choice or choice == 's':
+            return config
+
+        if choice == '1':
+            config = CoverConfig(mode=MODENONE)
+            print("  Capa desativada.")
+            continue
+
+        if choice == '2':
+            covers = ListCovers()
+            if not covers:
+                print(f"  [!] Nenhum .mp4 encontrado em {VIDEOS}")
+                continue
+
+            print("\n  ─────── Escolher capa única ────────────")
+            for i, (name, path, size) in enumerate(covers, 1):
+                sizeMb = size / 1024 / 1024
+                print(f"  {i}. {name}  ({sizeMb:.1f} MB)")
+            print(f"\n  0. Voltar")
+
+            try:
+                subChoice = input("\n  Escolha: ").strip()
+            except (EOFError, KeyboardInterrupt):
+                raise _Quit()
+
+            if subChoice == '0':
+                continue
+            if subChoice.isdigit():
+                idx = int(subChoice) - 1
+                if 0 <= idx < len(covers):
+                    config = CoverConfig(mode = MODESINGLE, singlePath = covers[idx][1])
+                    print(f"  Capa única selecionada: {covers[idx][0]}")
+                    continue
+            print("  Opção inválida.")
+            continue
+
+        print("  Opção inválida.")
+
+
+# Menu principal de codificação
+# A fazer
 
 
 _ACTIONS = {
