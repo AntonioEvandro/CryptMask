@@ -1,4 +1,5 @@
 import os, sys
+from utils.Utils import MENU, _Back, _Quit
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -11,9 +12,22 @@ DECRYPTS = os.path.join(BASE, 'decrypts')
 for _ in (INPUTS, OUTPUTS, DECRYPTS):
     os.makedirs(_, exist_ok=True)
 
-# Exceções de navegação
-class _Back(Exception):
-    pass
+_ACTIONS = {
+    '1',
+    '2',
+    '3',
+    '4',
+}
 
-class _Quit(Exception):
-    pass
+def main():
+    while True:
+        print(MENU)
+        try:
+            choice = input("Opção: ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print("\nAté mais.")
+            break
+
+        if choice == 'q':
+            print("Até mais.")
+            break

@@ -25,9 +25,9 @@ CryptMask/
         decoder.py
         menu.py
     utils/
-    inputs/             %%Arquivos a codificar%%
-    outputs/            %%Arquivos de vídeo gerados%%
-    decripts/           %%Arquivos decodificados%%
+    inputs/             Arquivos a codificar
+    outputs/            Arquivos de vídeo gerados
+    decripts/           Arquivos decodificados
 ```
 
 ## Uso
@@ -38,9 +38,9 @@ py run.py
 
 Menu interativo guia todas as operações. Em qualquer prompt:
 
-- **Enter**             %%Confirma a opção padrão%%
-- **0**                 %%Volta ao menu principal%%
-- **q**                 %%Encerra o programa%%
+- **Enter**             Confirma a opção padrão
+- **0**                 Volta ao menu principal
+- **q**                 Encerra o programa
 
 ---
 
