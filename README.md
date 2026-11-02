@@ -84,7 +84,7 @@ o programa localiza e reconstitui as demais automaticamente.
 ### Payload interno
 
 ```txt
-GFCRYPT2      (8 bytes)   assinatura
+CRYPTMSK      (8 bytes)   assinatura
 tipo          (1 byte)    0 = arquivo único  |  1 = parte de split
 idx           (2 bytes)   índice da parte (0 se único, 1..N se split)
 total_partes  (2 bytes)   total de partes (1 se único)
