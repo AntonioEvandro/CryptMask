@@ -3,6 +3,11 @@ from utils.Utils import MENU, _Back, _Quit, AFTERACTION
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from functions.Core import SPLIT_SIZE, TYPE_SPLIT, ListCovers, VIDEOS
+from functions.Cover import (
+    CoverConfig, MODENONE, MODESINGLE, DescribeStatus, ResolveCoverSequence
+)
+
 # Diretorios padrões
 BASE = os.path.dirname(os.path.abspath(__file__))
 INPUTS = os.path.join(BASE, 'inputs')
@@ -76,7 +81,16 @@ def ResolveDecOutput(raw: str, originalName: str) -> str:
     return os.path.join(DECRYPTS, raw)
 
 
+# Sub menu: gerenciar vídeo(s) de capa
+def SubmenuCover(config: CoverConfig = None) -> CoverConfig:
+    """
+    Sub-menu para gerenciar vídeo(s) de capa (modo único ou nenhum).
 
+    Modo padrão: capa única (usa videos/cover.mp4 se existir, senão pergunta).
+    """
+    if config is None:
+        # Define como SINGLE por padrão (usa cover.mp4 se existir)
+        config = CoverConfig(mode=MODE_SINGLE)
 
 
 _ACTIONS = {
