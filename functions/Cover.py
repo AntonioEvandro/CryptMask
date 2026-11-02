@@ -55,3 +55,26 @@ def DescribeStatus(config: CoverConfig) -> str:
             sizeMb = os.path.getsize(path) / 1024 / 1024
             return f"[Capa única]\n({os.path.relpath(path, VIDEOS if os.path.isdir(VIDEOS) else os.path.dirname(path))} - {sizeMb:.1f} MB)"
         return "[Capa única]\n(arquivo não encontrado)"
+
+
+# Resolução em lista de vídeos a concatenar
+def ResolveCoverSequence(config: CoverConfig) -> list:
+    """
+    Resolve a configuração para uma lista de caminhos (0 ou 1).
+    
+    Retorna [] se não houver capa nenhuma a aplicar (modo NONE, ou pasta
+    vazia / arquivo single inexistente - nesses casos cai para "sem capa").
+    """
+    if config.mode == MODENONE:
+        return []
+
+    path = config.SinglePath()
+    if path and os.path.exists(path):
+        return [path]
+    return []   # sem capa única disponível -> sem capa
+
+
+def totalCoverSize(paths: list) -> int:
+    return sum(GetCoverSize(p) for p in paths)
+
+
