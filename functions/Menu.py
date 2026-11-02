@@ -12,6 +12,8 @@ DECRYPTS = os.path.join(BASE, 'decrypts')
 for _ in (INPUTS, OUTPUTS, DECRYPTS):
     os.makedirs(_, exist_ok=True)
 
+
+
 _ACTIONS = {
     '1',
     '2',
@@ -31,3 +33,22 @@ def main():
         if choice == 'q':
             print("Até mais.")
             break
+
+        action = _ACTIONS.get(choice)
+        if not action:
+            print("Opção inválida.")
+            continue
+
+        try:
+            action()
+        except _Back:
+            continue
+        except _Quit:
+            print("\n Até mais.")
+            break
+        except FileNotFoundError as e:
+            print(f"\n[ERRO] {e}")
+        except RuntimeError as e:
+            print(f"\n[ERRO] {e}")
+        except Exception as e:
+            print(f"\n[Erro inesperado] {e}")
