@@ -12,7 +12,16 @@ DECRYPTS = os.path.join(BASE, 'decrypts')
 for _ in (INPUTS, OUTPUTS, DECRYPTS):
     os.makedirs(_, exist_ok=True)
 
-
+def ask(prompt: str, default: str = '') -> str:
+    try:
+        val = input(prompt).strip()
+    except (EOFError, KeyboardInterrupt):
+        raise _Quit()
+    if val.lower() == 'q':
+        raise _Quit()
+    if val == '0':
+        raise _Back()
+    return val if val else default
 
 _ACTIONS = {
     '1',
