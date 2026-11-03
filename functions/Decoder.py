@@ -52,3 +52,14 @@ def FindPayload(mp4Path: str) -> int:
             offset += len(chunk)
 
     raise ValueError("Marcador CRYPTMSK não encontrado - arquivo inválido.")
+
+def PeekMeta(mp4Path: str) -> dict | None:
+    try:
+        offset = FindPayload(mp4Path)
+        with open(mp4Path, 'rb') as f:
+            f.seek(offset)
+            return readFreeBoxAndMeta(f)
+    except Exception:
+        return None
+
+
