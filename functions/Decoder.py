@@ -150,3 +150,10 @@ def Decode(inputPath: str, outputPath: str = None) -> None:
                 label = f"[dec] {m['idx']}/{m['totalParts']}  "
                 ExtractData(f, outF, m['dataLen'], label)
     print(f"[dec] Salvo em: {out}")
+
+    if __name__ == '__main__':
+        if len(sys.argv) < 2:
+            print("uso: python Decoder.py <arquivo.mp4> [saida]")
+            sys.exit(1)
+        output = sys.argv[2] if len(sys.argv) >= 3 else None
+        Decode(sys.argv[1], output)
