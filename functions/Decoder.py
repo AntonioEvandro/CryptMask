@@ -6,6 +6,7 @@ from functions.Core import (
     LoadHeader, readFreeBoxAndMeta, CHUNK_SIZE, TYPE_SPLIT,
     ShowProgress, COVER_END
 )
+from utils.Utils import GB as gb
 
 MARKER_LEN = len(COVER_END) # 16
 HEADER_SIZE = None # Calculando lazy via loadHeader()
@@ -118,3 +119,16 @@ def Decode(inputPath: str, outputPath: str = None) -> None:
     originalName = meta['originalName']
     out = outputPath if outputPath else originalName
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
+
+    # Arquivo único
+    if meta['tipo'] != TYPE_SPLIT:
+        print(f"[dec] Lendo: {inputPath}")
+        print(f"[dec] Arquivo original: {originalName}  "
+              f"({meta['dataLen'] / gb / gb:.2f} MB)")
+        with open(inputPath, 'rb') as f:
+            f.seek(offset)
+            readFreeBoxAndMeta(f)   # reposiciona cursor nos dados
+            with open(out, 'wb') as out_f:
+                ExtractData(f, out_f, meta['dataLen'])
+        print(f"[dec] Salvo em: {out}")
+        return
