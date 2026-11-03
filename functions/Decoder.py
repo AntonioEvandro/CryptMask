@@ -63,3 +63,17 @@ def PeekMeta(mp4Path: str) -> dict | None:
         return None
 
 
+def ExtractData(f, outF, dataLen: int, label: str = '[dec] ') -> None:
+    remaining = dataLen
+    done      = 0
+    while remaining > 0:
+        chunk = f.read(min(CHUNK_SIZE, remaining))
+        if not chunk:
+            break
+        outF.write(chunk)
+        done      += len(chunk)
+        remaining -= len(chunk)
+        ShowProgress(done, dataLen, label)
+    print()
+
+
