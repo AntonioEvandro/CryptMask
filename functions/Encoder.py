@@ -56,3 +56,48 @@ def EncodeSingle(inputPath: str, outputPath: str, coverPaths: list = None) -> No
     WriteMp4(inputPath, outputPath, originalName, TYPE_SINGLE, 0, 1, 0, dataLen, coverPaths)
 
 
+def EncodeSplit(
+        inputPath: str, outputDir: str, coverPaths: list = None, 
+        splitSize: int = SPLIT_SIZE) -> list:
+    if not os.path.exists(inputPath):
+        raise FileNotFoundError(f"Arquivo não encontrado: {inputPath}")
+
+    fileSize = os.path.getsize(inputPath)
+    originalName = os.path.basename(inputPath)
+    stem = os.path.splitext(originalName)[0]
+
+    coverPaths = coverPaths or []
+    coverSize = totalCoverSize(coverPaths)
+    effectiveSplitSize = splitSize - coverSize
+
+    if effectiveSplitSize <= 0:
+        raise ValueError(
+            f"Capa(s) muito grande(s) ({coverSize / gb / gb:.1f} MB). "
+            f"Limite de split é {splitSize / gb / gb / gb:.1f} GB)."
+        )
+
+    totalParts = (fileSize + effectiveSplitSize - 1) // effectiveSplitSize
+
+    print(f"[ENC] Arquivo: {inputPath} ({fileSize / gb / gb / gb:.2f} GB)")
+    if coverPaths:
+        print(f"[enc] Capa(s): {len(coverPaths)} vídeo(s)  ({coverSize / gb / gb:.1f} MB)")
+    print(f"[enc] Dividindo em {totalParts} parte(s) de até "
+          f"{effectiveSplitSize / gb / gb / gb:.1f} GB cada")
+
+    os.makedirs(outputDir, exist_ok=True)
+    outputs = []
+
+    for idx in range(1, totalParts + 1):
+        dataStart = (idx - 1) * effectiveSplitSize
+        dataLen   = min(effectiveSplitSize, fileSize - dataStart)
+        outPath   = os.path.join(outputDir, f"{stem}.split{idx}.mp4")
+
+        partCoverPaths = coverPaths.copy() if coverPaths else []
+        
+        WriteMp4(inputPath, outPath, originalName,
+                   TYPE_SPLIT, idx, totalParts,
+                   dataStart, dataLen, partCoverPaths)
+        outputs.append(outPath)
+
+    print(f"[enc] Concluído: {totalParts} arquivo(s) gerado(s) em '{outputDir}'")
+    return outputs
