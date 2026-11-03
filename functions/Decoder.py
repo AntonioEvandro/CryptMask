@@ -7,7 +7,7 @@ from functions.Core import (
     ShowProgress, COVER_END
 )
 
-MAKER_LEN = len(COVER_END) # 16
+MARKER_LEN = len(COVER_END) # 16
 HEADER_SIZE = None # Calculando lazy via loadHeader()
 
 
@@ -32,8 +32,23 @@ def FindPayload(mp4Path: str) -> int:
     except Exception:
         pass
 
-    chunkOverlap = MAKER_LEN - 1
+    chunkOverlap = MARKER_LEN - 1
     offset = 0
     fileSize = os.path.getsize(mp4Path)
 
-    
+    with open(mp4Path, 'rb') as f:
+        prev = b''
+        while offset < fileSize:
+            chunk = f.read(CHUNK_SIZE)
+            if not chunk:
+                break
+            combined = prev + chunk
+            pos = combined.find(COVER_END)
+            if pos>= 0:
+                # offset absoluto do início do marcador
+                absMarker = offset - len(prev) + pos
+                return absMarker + MARKER_LEN
+            prev = combined[-chunkOverlap:] if len(combined) >= chunkOverlap else combined
+            offset += len(chunk)
+
+    raise ValueError("Marcador CRYPTMSK não encontrado - arquivo inválido.")
