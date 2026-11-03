@@ -2,7 +2,7 @@ import os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.Utils import MENU, _Back, _Quit, AFTERACTION, PARTSCHOICE
+from utils.Utils import MENU, _Back, _Quit, AFTERACTION, GB as gb, PARTSCHOICE
 from functions.Core import SPLIT_SIZE, TYPE_SPLIT, ListCovers, VIDEOS
 from functions.Cover import (
     CoverConfig, MODENONE, MODESINGLE, DescribeStatus, ResolveCoverSequence
@@ -165,7 +165,6 @@ def MenuEncode():
                 break
             print(f"  [!] Não encontrado: '{raw}'  -  tente novamente.")
 
-        gb = 1024
 
         fileSize     = os.path.getsize(src)
         originalName = os.path.basename(src)
