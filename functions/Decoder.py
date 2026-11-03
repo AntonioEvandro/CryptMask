@@ -105,3 +105,16 @@ def FindSplitParts(firstPath: str, meta: dict) -> list:
     return [parts[i] for i in range(1, totalParts + 1)]
 
 
+def Decode(inputPath: str, outputPath: str = None) -> None:
+    if not os.path.exists(inputPath):
+        raise FileNotFoundError(f"Arquivo não encontrado: {inputPath}")
+
+    offset = FindPayload(inputPath)
+
+    with open(inputPath, 'rb') as f:
+        f.seek(offset)
+        meta = readFreeBoxAndMeta(f)
+
+    originalName = meta['originalName']
+    out = outputPath if outputPath else originalName
+    os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
