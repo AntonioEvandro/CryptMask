@@ -8,6 +8,7 @@ from functions.Cover import (
     CoverConfig, MODENONE, MODESINGLE, DescribeStatus, ResolveCoverSequence
 )
 from functions.Encoder import EncodeSingle, EncodeSplit
+from functions.Decoder import Decode, PeekMeta
 
 # Diretorios padrões
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -233,14 +234,29 @@ def MenuDecode():
                 break
             print(f"  [!] Não encontrado: '{raw}'  -  tente novamente.")
 
+        meta = PeekMeta(src)
+        if meta:
+            originalName = meta['originalName']
+            isSplit      = meta['tipo'] == TYPE_SPLIT
+            label = f"split  {meta['totalParts']} parte(s)" if isSplit else "único"
+            print(f"\n  Arquivo original : {originalName}")
+            print(f"  Tipo             : {label}")
+            print(f"  Tamanho dos dados: {meta['dataLen'] / gb / gb:.1f} MB")
+        else:
+            originalName = os.path.splitext(os.path.basename(src))[0]
+            print("  [aviso] Não foi possível ler metadados do arquivo.")
+
+        rawDst = ask(f"\nDestino (Enter = decrypts/{originalName}): ", default='')
+        dst = ResolveDecOutput(rawDst, originalName)
+        Decode(src, dst)
 
         if not AfterAction():
             break
 
 
 _ACTIONS = {
-    '1',
-    '2'
+    '1': MenuEncode,
+    '2': MenuDecode
 }
 
 
