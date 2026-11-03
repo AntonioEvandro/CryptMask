@@ -10,3 +10,10 @@ from functions.Core import (
 MAKER_LEN = len(COVER_END) # 16
 HEADER_SIZE = None # Calculando lazy via loadHeader()
 
+
+def GetHeaderSize() -> int:
+    global HEADER_SIZE
+    if HEADER_SIZE is None:
+        HEADER_SIZE = len(LoadHeader())
+    return HEADER_SIZE
+
