@@ -132,3 +132,21 @@ def Decode(inputPath: str, outputPath: str = None) -> None:
                 ExtractData(f, out_f, meta['dataLen'])
         print(f"[dec] Salvo em: {out}")
         return
+
+    # Arquivo split
+    print(f"[dec] Split detectado  ({meta['totalParts']} parte(s)  →  '{originalName}')")
+    parts = FindSplitParts(inputPath, meta)
+
+    totalSize = sum(PeekMeta(p)['dataLen'] for p in parts)
+    print(f"[dec] Tamanho total: {totalSize / gb / gb / gb:.2f} GB")
+
+    with open(out, 'wb') as outF:
+        for path in parts:
+            print(f"[dec] Parte: {os.path.basename(path)}")
+            off = FindPayload(path)
+            with open(path, 'rb') as f:
+                f.seek(off)
+                m = readFreeBoxAndMeta(f)
+                label = f"[dec] {m['idx']}/{m['totalParts']}  "
+                ExtractData(f, outF, m['dataLen'], label)
+    print(f"[dec] Salvo em: {out}")
