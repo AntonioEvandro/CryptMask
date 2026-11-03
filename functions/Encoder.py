@@ -10,7 +10,7 @@ from functions.Cover import WriteCoverBlock, totalCoverSize
 from utils.Utils import GB as gb
 
 
-def WriteMp4(input: str, output: str, originalName: str, tipo: int,
+def WriteMp4(inputPath: str, outputPath: str, originalName: str, tipo: int,
     idx: int, totalParts: int, dataStart: int, dataLen: int, 
     coverPaths: list = None) -> None:
 
@@ -18,16 +18,16 @@ def WriteMp4(input: str, output: str, originalName: str, tipo: int,
     fboxHdr = MakeFreeBoxHeader(len(meta) + dataLen)
     mdat = MakeMdatBox()
 
-    os.makedirs(os.path.dirname(os.path.abspath(output)), exist_ok=True)
+    os.makedirs(os.path.dirname(os.path.abspath(outputPath)), exist_ok=True)
 
-    with open(output, 'wb') as outF:
+    with open(outputPath, 'wb') as outF:
         WriteCoverBlock(outF, coverPaths or [])
 
         # Metadados e dados
         outF.write(fboxHdr)
         outF.write(meta)
 
-        with open(input, 'rb') as inF:
+        with open(inputPath, 'rb') as inF:
             inF.seek(dataStart)
             remaining = dataLen
             written = 0
@@ -41,5 +41,18 @@ def WriteMp4(input: str, output: str, originalName: str, tipo: int,
                 ShowProgress(written, dataLen, label)
         outF.write(mdat)
     print()
-    totalSize = os.path.getsize(output)
-    print(f"[enc] Salvo: {output}  ({totalSize / gb / gb:.2f} MB)")
+    totalSize = os.path.getsize(outputPath)
+    print(f"[enc] Salvo: {outputPath}  ({totalSize / gb / gb:.2f} MB)")
+
+
+def EncodeSingle(inputPath: str, outputPath: str, coverPaths: list = None) -> None:
+    if not os.path.exists(inputPath):
+        raise FileNotFoundError(f"Arquivo não encontrado: {inputPath}")
+
+    dataLen = os.path.getsize(inputPath)
+    originalName = os.path.basename(inputPath)
+
+    print(f"[enc] Lendo: {inputPath}  ({dataLen / gb / gb:.2f} MB)")
+    WriteMp4(inputPath, outputPath, originalName, TYPE_SINGLE, 0, 1, 0, dataLen, coverPaths)
+
+
