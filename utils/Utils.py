@@ -13,8 +13,6 @@ MENU = """
         ╠══════════════════════════════╣
         ║  1. Codificar arquivo        ║
         ║  2. Decodificar arquivo      ║
-        ║  3. Verificar integridade    ║
-        ║  4. Informações do arquivo   ║
         ║                              ║
         ║  q. Sair                     ║
         ╚══════════════════════════════╝"""
@@ -24,4 +22,10 @@ AFTERACTION = """
     1. Repetir com outro arquivo
     0. Voltar ao menu principal
     q. Sair
+"""
+
+PARTSCHOICE = """
+    1. Dividir em partes
+
+    2. Arquivo único
 """
