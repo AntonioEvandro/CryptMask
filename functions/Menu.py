@@ -7,7 +7,7 @@ from functions.Core import SPLIT_SIZE, TYPE_SPLIT, ListCovers, VIDEOS
 from functions.Cover import (
     CoverConfig, MODENONE, MODESINGLE, DescribeStatus, ResolveCoverSequence
 )
-from functions.Encoder import encodeSingle, encodeSplit
+from functions.Encoder import EncodeSingle, EncodeSplit
 
 # Diretorios padrões
 BASE = os.path.dirname(os.path.abspath(__file__))
