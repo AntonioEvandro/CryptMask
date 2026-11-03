@@ -222,6 +222,21 @@ def MenuEncode():
             break
 
 
+def MenuDecode():
+    while True:
+        print("\n   Decodificar\n  (0 = menu | q = sair)\n")
+
+        while True:
+            raw = ask("Arquivo .mp4 (ou nome dentro de outputs/): ")
+            src = FindInput(raw)
+            if os.path.exists(src):
+                break
+            print(f"  [!] Não encontrado: '{raw}'  -  tente novamente.")
+
+
+        if not AfterAction():
+            break
+
 
 _ACTIONS = {
     '1',
