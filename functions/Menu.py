@@ -1,5 +1,5 @@
 import os, sys
-from utils.Utils import MENU, _Back, _Quit, AFTERACTION
+from utils.Utils import MENU, _Back, _Quit, AFTERACTION, PARTSCHOICE
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -152,7 +152,75 @@ def SubmenuCover(config: CoverConfig = None) -> CoverConfig:
 
 
 # Menu principal de codificação
-# A fazer
+def MenuEncode():
+    while True:
+        print("\n    Codificar")
+        print("  (0 = menu | q = sair)\n")
+
+        while True:
+            raw = ask("Arquivo de entrada (ou nome dentro de \"inputs/\"): ")
+            src = FindInput(raw)
+            if os.path.exists(src):
+                break
+            print(f"  [!] Não encontrado: '{raw}'  -  tente novamente.")
+
+        gb = 1024
+
+        fileSize     = os.path.getsize(src)
+        originalName = os.path.basename(src)
+        sizeGB       = fileSize / gb / gb / gb
+        sizeMB       = fileSize / gb / gb
+
+        print(f"\n Arquivo : {originalName}")
+        print(f"  Tamanho : {sizeMB:.1f} MB ({sizeGB:.2f} GB)")
+
+        # Sub-menu de gerenciamento de capa
+        coverConfig = SubmenuCover()
+        coverPaths = ResolveCoverSequence(coverConfig)
+
+        # Split / único
+        if fileSize > SPLIT_SIZE:
+            numParts = (fileSize + SPLIT_SIZE - 1) // SPLIT_SIZE
+            partGB = SPLIT_SIZE / gb / gb / gb
+            print(f"\n  Arquivo maior que {partGB:.0f} GB.")
+            print(f"  Serão geradas {numParts} parte(s) de até {partGB:.0f} GB cada.")
+            print(PARTSCHOICE)
+
+            while True:
+                choice = ask("\n Opção 1: ", default='1')
+                if choice == '1':
+                    doSplit = True
+                    break
+                elif choice == '2':
+                    confirm = ask(
+                        "  Tem certeza? Arquivos muito grandes podem dar erro. (S/N): ",
+                        default='n'
+                    )
+                    if confirm.lower() == 's':
+                        doSplit = False
+                        break
+                    else:
+                        print("  Voltando à escolha anterior...")
+                else:
+                    print("  Opção inválida.")
+        else:
+            doSplit = False
+
+        if doSplit:
+            rawDst = ask("\nPasta de saída ([Enter] = \"outputs/\"): ", default='')
+            dstDir = rawDst if rawDst else OUTPUTS
+            #encodeSplit(src, dstDir, coverPaths) # A fazer
+        else:
+            rawDst = ask(
+                f"\nDestino ([Enter] = \"outputs/{os.path.splitext(originalName)[0]}.mp4\"): "
+                default=''
+            )
+            dst = ResolveEncOutput(rawDst, originalName)
+            #encodeSingle(src, dst, coverPaths) # A fazer
+
+        if not AfterAction():
+            break
+
 
 
 _ACTIONS = {
