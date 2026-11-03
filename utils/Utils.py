@@ -29,3 +29,6 @@ PARTSCHOICE = """
 
     2. Arquivo único
 """
+
+GB = 1024
+
