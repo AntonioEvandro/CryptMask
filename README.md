@@ -25,6 +25,8 @@ CryptMask/
         decoder.py
         menu.py
     utils/
+    bin/
+        header.bin
     videos/             Arquivos de video para mascarar
     inputs/             Arquivos a codificar
     outputs/            Arquivos de vídeo gerados
