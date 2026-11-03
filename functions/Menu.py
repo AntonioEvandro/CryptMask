@@ -209,14 +209,14 @@ def MenuEncode():
         if doSplit:
             rawDst = ask("\nPasta de saída ([Enter] = \"outputs/\"): ", default='')
             dstDir = rawDst if rawDst else OUTPUTS
-            #encodeSplit(src, dstDir, coverPaths) # A fazer
+            EncodeSplit(src, dstDir, coverPaths) # A fazer
         else:
             rawDst = ask(
-                f"\nDestino ([Enter] = \"outputs/{os.path.splitext(originalName)[0]}.mp4\"): "
+                f"\nDestino ([Enter] = \"outputs/{os.path.splitext(originalName)[0]}.mp4\"): ",
                 default=''
             )
             dst = ResolveEncOutput(rawDst, originalName)
-            #encodeSingle(src, dst, coverPaths) # A fazer
+            EncodeSingle(src, dst, coverPaths) # A fazer
 
         if not AfterAction():
             break
