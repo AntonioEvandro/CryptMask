@@ -17,3 +17,23 @@ def GetHeaderSize() -> int:
         HEADER_SIZE = len(LoadHeader())
     return HEADER_SIZE
 
+
+def FindPayload(mp4Path: str) -> int:
+    headerSize = GetHeaderSize()
+
+    with open(mp4Path, 'rb') as f:
+        # Verifica se começa com header.bin
+        candidate = f.read(headerSize)
+
+    try:
+        header = LoadHeader()
+        if candidate == header:
+            return headerSize # Arquivo sem capa
+    except Exception:
+        pass
+
+    chunkOverlap = MAKER_LEN - 1
+    offset = 0
+    fileSize = os.path.getsize(mp4Path)
+
+    
