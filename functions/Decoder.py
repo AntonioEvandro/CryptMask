@@ -77,3 +77,31 @@ def ExtractData(f, outF, dataLen: int, label: str = '[dec] ') -> None:
     print()
 
 
+def FindSplitParts(firstPath: str, meta: dict) -> list:
+    folder        = os.path.dirname(os.path.abspath(firstPath))
+    originalName = meta['originalName']
+    totalParts   = meta['totalParts']
+    stem          = os.path.splitext(originalName)[0]
+
+    pattern    = os.path.join(folder, f"{stem}.split*.mp4")
+    candidates = glob.glob(pattern)
+
+    parts = {}
+    for path in candidates:
+        m = PeekMeta(path)
+        if (m and m.get('tipo') == TYPE_SPLIT
+                and m.get('originalName') == originalName
+                and m.get('totalParts') == totalParts):
+            parts[m['idx']] = path
+
+    missing = [i for i in range(1, totalParts + 1) if i not in parts]
+    if missing:
+        raise RuntimeError(
+            f"Partes faltando: {missing}\n"
+            f"Certifique-se de que todos os arquivos '{stem}.split*.mp4' "
+            f"estão na mesma pasta."
+        )
+
+    return [parts[i] for i in range(1, totalParts + 1)]
+
+
