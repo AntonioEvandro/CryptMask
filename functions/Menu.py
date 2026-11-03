@@ -1,12 +1,13 @@
 import os, sys
-from utils.Utils import MENU, _Back, _Quit, AFTERACTION, PARTSCHOICE
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from utils.Utils import MENU, _Back, _Quit, AFTERACTION, PARTSCHOICE
 from functions.Core import SPLIT_SIZE, TYPE_SPLIT, ListCovers, VIDEOS
 from functions.Cover import (
     CoverConfig, MODENONE, MODESINGLE, DescribeStatus, ResolveCoverSequence
 )
+from functions.Encoder import encodeSingle, encodeSplit
 
 # Diretorios padrões
 BASE = os.path.dirname(os.path.abspath(__file__))
